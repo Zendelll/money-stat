@@ -75,6 +75,7 @@ def add_transaction(user_id: str, amount: float, category: str, comment: str = "
         "limits": limits,
         "month_id": user["month_id"]
     }).eq("id", user_id).execute()
+    time.sleep(1)
     change_predicted_savings(user_id)
 
 
