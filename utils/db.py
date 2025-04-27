@@ -32,7 +32,7 @@ def change_predicted_savings(user_id: str):
     limits = user["limits"]
     predicted_savings = user["balance"]
     for category, limit in limits.items():
-        predicted_savings -= float(limit["spent"]) if float(limit["spent"]) > float(limit["limit"]) else float(limit["limit"])
+        predicted_savings -= 0 if limit["spent"] > limit["limit"] else limit["limit"]-limit["spent"]
     supabase.table("users").update({"predicted_savings": predicted_savings}).eq("id", user_id).execute()
 
 def add_transaction(user_id: str, amount: float, category: str, comment: str = "", new_month: bool = False):
