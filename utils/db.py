@@ -1,6 +1,7 @@
 from supabase import create_client, Client
 import streamlit as st
 from utils.constants import DEFAULT_LIMITS
+import time
 
 # Подключение к Supabase
 url = st.secrets["SUPABASE_URL"]
@@ -32,7 +33,7 @@ def change_predicted_savings(user_id: str):
     limits = user["limits"]
     predicted_savings = user["balance"]
     for category, limit in limits.items():
-        predicted_savings -= 0 if limit["spent"] > limit["limit"] else limit["limit"]-limit["spent"]
+        predicted_savings -= 0 if float(limit["spent"]) > float(limit["limit"]) else (float(limit["limit"])-float(limit["spent"]))
     supabase.table("users").update({"predicted_savings": predicted_savings}).eq("id", user_id).execute()
 
 def add_transaction(user_id: str, amount: float, category: str, comment: str = "", new_month: bool = False):
@@ -74,7 +75,6 @@ def add_transaction(user_id: str, amount: float, category: str, comment: str = "
         "limits": limits,
         "month_id": user["month_id"]
     }).eq("id", user_id).execute()
-    
     change_predicted_savings(user_id)
 
 
